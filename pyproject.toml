@@ -13,7 +13,8 @@ readme = "README.md"
 requires-python = ">= 3.11"
 
 [project.scripts]
-hello = "grpc_tutor:hello"
+helloworld-server = "grpc_tutor.greeter_server:serve"
+helloworld-client = "grpc_tutor.greeter_client:run"
 
 [build-system]
 requires = ["setuptools"]
