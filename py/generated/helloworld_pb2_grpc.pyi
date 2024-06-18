@@ -5,9 +5,9 @@ isort:skip_file
 
 import abc
 import collections.abc
+import generated.helloworld_pb2
 import grpc
 import grpc.aio
-import helloworld_pb2
 import typing
 
 _T = typing.TypeVar("_T")
@@ -22,8 +22,8 @@ class GreeterStub:
 
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
     SayHello: grpc.UnaryUnaryMultiCallable[
-        helloworld_pb2.HelloRequest,
-        helloworld_pb2.HelloReply,
+        generated.helloworld_pb2.HelloRequest,
+        generated.helloworld_pb2.HelloReply,
     ]
     """Sends a greeting"""
 
@@ -31,8 +31,8 @@ class GreeterAsyncStub:
     """The greeting service definition."""
 
     SayHello: grpc.aio.UnaryUnaryMultiCallable[
-        helloworld_pb2.HelloRequest,
-        helloworld_pb2.HelloReply,
+        generated.helloworld_pb2.HelloRequest,
+        generated.helloworld_pb2.HelloReply,
     ]
     """Sends a greeting"""
 
@@ -42,9 +42,9 @@ class GreeterServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def SayHello(
         self,
-        request: helloworld_pb2.HelloRequest,
+        request: generated.helloworld_pb2.HelloRequest,
         context: _ServicerContext,
-    ) -> typing.Union[helloworld_pb2.HelloReply, collections.abc.Awaitable[helloworld_pb2.HelloReply]]:
+    ) -> typing.Union[generated.helloworld_pb2.HelloReply, collections.abc.Awaitable[generated.helloworld_pb2.HelloReply]]:
         """Sends a greeting"""
 
 def add_GreeterServicer_to_server(servicer: GreeterServicer, server: typing.Union[grpc.Server, grpc.aio.Server]) -> None: ...

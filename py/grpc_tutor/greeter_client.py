@@ -6,8 +6,7 @@ from __future__ import print_function
 import logging
 
 import grpc
-import helloworld_pb2
-import helloworld_pb2_grpc
+from generated import helloworld_pb2, helloworld_pb2_grpc
 
 
 def run() -> None:

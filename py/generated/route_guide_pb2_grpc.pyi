@@ -5,9 +5,9 @@ https://github.com/grpc/grpc/blob/b8a04ac/examples/protos/route_guide.proto"""
 
 import abc
 import collections.abc
+import generated.route_guide_pb2
 import grpc
 import grpc.aio
-import route_guide_pb2
 import typing
 
 _T = typing.TypeVar("_T")
@@ -20,14 +20,14 @@ class _ServicerContext(grpc.ServicerContext, grpc.aio.ServicerContext):  # type:
 class RouteGuideStub:
     def __init__(self, channel: typing.Union[grpc.Channel, grpc.aio.Channel]) -> None: ...
     GetFeature: grpc.UnaryUnaryMultiCallable[
-        route_guide_pb2.Point,
-        route_guide_pb2.Feature,
+        generated.route_guide_pb2.Point,
+        generated.route_guide_pb2.Feature,
     ]
     """obtains the feature at a given position."""
 
     ListFeatures: grpc.UnaryStreamMultiCallable[
-        route_guide_pb2.Rectangle,
-        route_guide_pb2.Feature,
+        generated.route_guide_pb2.Rectangle,
+        generated.route_guide_pb2.Feature,
     ]
     """Obtains the Features available within the given Rectangle.  Results are
     streamed rather than returned at once (e.g. in a response message with a
@@ -36,16 +36,16 @@ class RouteGuideStub:
     """
 
     RecordRoute: grpc.StreamUnaryMultiCallable[
-        route_guide_pb2.Point,
-        route_guide_pb2.RouteSummary,
+        generated.route_guide_pb2.Point,
+        generated.route_guide_pb2.RouteSummary,
     ]
     """Accepts a stream of Points on a route being traversed, returning a
     RouteSummary when traversal is completed.
     """
 
     RouteChat: grpc.StreamStreamMultiCallable[
-        route_guide_pb2.RouteNote,
-        route_guide_pb2.RouteNote,
+        generated.route_guide_pb2.RouteNote,
+        generated.route_guide_pb2.RouteNote,
     ]
     """Accepts a stream of RouteNotes sent while a route is being traversed,
     while receiving other RouteNotes (e.g. from other users).
@@ -53,14 +53,14 @@ class RouteGuideStub:
 
 class RouteGuideAsyncStub:
     GetFeature: grpc.aio.UnaryUnaryMultiCallable[
-        route_guide_pb2.Point,
-        route_guide_pb2.Feature,
+        generated.route_guide_pb2.Point,
+        generated.route_guide_pb2.Feature,
     ]
     """obtains the feature at a given position."""
 
     ListFeatures: grpc.aio.UnaryStreamMultiCallable[
-        route_guide_pb2.Rectangle,
-        route_guide_pb2.Feature,
+        generated.route_guide_pb2.Rectangle,
+        generated.route_guide_pb2.Feature,
     ]
     """Obtains the Features available within the given Rectangle.  Results are
     streamed rather than returned at once (e.g. in a response message with a
@@ -69,16 +69,16 @@ class RouteGuideAsyncStub:
     """
 
     RecordRoute: grpc.aio.StreamUnaryMultiCallable[
-        route_guide_pb2.Point,
-        route_guide_pb2.RouteSummary,
+        generated.route_guide_pb2.Point,
+        generated.route_guide_pb2.RouteSummary,
     ]
     """Accepts a stream of Points on a route being traversed, returning a
     RouteSummary when traversal is completed.
     """
 
     RouteChat: grpc.aio.StreamStreamMultiCallable[
-        route_guide_pb2.RouteNote,
-        route_guide_pb2.RouteNote,
+        generated.route_guide_pb2.RouteNote,
+        generated.route_guide_pb2.RouteNote,
     ]
     """Accepts a stream of RouteNotes sent while a route is being traversed,
     while receiving other RouteNotes (e.g. from other users).
@@ -88,17 +88,17 @@ class RouteGuideServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def GetFeature(
         self,
-        request: route_guide_pb2.Point,
+        request: generated.route_guide_pb2.Point,
         context: _ServicerContext,
-    ) -> typing.Union[route_guide_pb2.Feature, collections.abc.Awaitable[route_guide_pb2.Feature]]:
+    ) -> typing.Union[generated.route_guide_pb2.Feature, collections.abc.Awaitable[generated.route_guide_pb2.Feature]]:
         """obtains the feature at a given position."""
 
     @abc.abstractmethod
     def ListFeatures(
         self,
-        request: route_guide_pb2.Rectangle,
+        request: generated.route_guide_pb2.Rectangle,
         context: _ServicerContext,
-    ) -> typing.Union[collections.abc.Iterator[route_guide_pb2.Feature], collections.abc.AsyncIterator[route_guide_pb2.Feature]]:
+    ) -> typing.Union[collections.abc.Iterator[generated.route_guide_pb2.Feature], collections.abc.AsyncIterator[generated.route_guide_pb2.Feature]]:
         """Obtains the Features available within the given Rectangle.  Results are
         streamed rather than returned at once (e.g. in a response message with a
         repeated field), as the rectangle may cover a large area and contain a
@@ -108,9 +108,9 @@ class RouteGuideServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def RecordRoute(
         self,
-        request_iterator: _MaybeAsyncIterator[route_guide_pb2.Point],
+        request_iterator: _MaybeAsyncIterator[generated.route_guide_pb2.Point],
         context: _ServicerContext,
-    ) -> typing.Union[route_guide_pb2.RouteSummary, collections.abc.Awaitable[route_guide_pb2.RouteSummary]]:
+    ) -> typing.Union[generated.route_guide_pb2.RouteSummary, collections.abc.Awaitable[generated.route_guide_pb2.RouteSummary]]:
         """Accepts a stream of Points on a route being traversed, returning a
         RouteSummary when traversal is completed.
         """
@@ -118,9 +118,9 @@ class RouteGuideServicer(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def RouteChat(
         self,
-        request_iterator: _MaybeAsyncIterator[route_guide_pb2.RouteNote],
+        request_iterator: _MaybeAsyncIterator[generated.route_guide_pb2.RouteNote],
         context: _ServicerContext,
-    ) -> typing.Union[collections.abc.Iterator[route_guide_pb2.RouteNote], collections.abc.AsyncIterator[route_guide_pb2.RouteNote]]:
+    ) -> typing.Union[collections.abc.Iterator[generated.route_guide_pb2.RouteNote], collections.abc.AsyncIterator[generated.route_guide_pb2.RouteNote]]:
         """Accepts a stream of RouteNotes sent while a route is being traversed,
         while receiving other RouteNotes (e.g. from other users).
         """
