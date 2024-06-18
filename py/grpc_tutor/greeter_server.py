@@ -1,8 +1,8 @@
 # https://github.com/grpc/grpc/blob/b8a04ac/examples/python/helloworld/greeter_server.py
 """The Python implementation of the GRPC helloworld.Greeter server."""
 
-from concurrent import futures
 import logging
+from concurrent import futures
 
 import grpc
 import helloworld_pb2
