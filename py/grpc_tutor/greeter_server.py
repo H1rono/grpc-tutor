@@ -10,11 +10,11 @@ import helloworld_pb2_grpc
 
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):
-    def SayHello(self, request, context):
+    def SayHello(self, request: helloworld_pb2_grpc.HelloRequest, context: grpc.ServicerContext) -> helloworld_pb2.HelloReply:
         return helloworld_pb2.HelloReply(message="Hello, %s!" % request.name)
 
 
-def serve():
+def serve() -> None:
     port = "50051"
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     helloworld_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
