@@ -25,6 +25,7 @@ managed = true
 dev-dependencies = [
     "ruff>=0.4.9",
     "types-protobuf>=5.26.0.20240422",
+    "mypy>=1.10.0",
 ]
 
 [tool.setuptools.packages.find]
