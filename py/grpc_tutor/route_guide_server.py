@@ -6,14 +6,13 @@ from concurrent.futures import ThreadPoolExecutor
 import grpc
 from generated import route_guide_pb2, route_guide_pb2_grpc
 
-from .route_guide_db import Point, Rectangle
+from .route_guide_db import Point, Rectangle, load_db
 
 
 class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     def __init__(self) -> None:
         super().__init__()
-        # 35.681042, 139.767214
-        self.db = {Point(356810420, 1397672140): "tokyo"}
+        self.db = {f.location: f.name for f in load_db()}
 
     def GetFeature(
         self,

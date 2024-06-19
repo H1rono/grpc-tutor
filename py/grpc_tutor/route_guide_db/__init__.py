@@ -1,4 +1,6 @@
+import json
 import math
+import pkgutil
 from dataclasses import dataclass
 from typing import Self
 
@@ -97,3 +99,10 @@ class Rectangle:
         include_latitude = self.includes_latitude(point.latitude)
         include_longitude = self.includes_longitude(point.longitude)
         return include_latitude and include_longitude
+
+
+def load_db() -> list[Feature]:
+    db_bytes = pkgutil.get_data("grpc_tutor", "route_guide_db/db.json")
+    assert db_bytes is not None
+    db = json.loads(db_bytes.decode())
+    return [Feature.from_dict(f) for f in db]
