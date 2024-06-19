@@ -15,6 +15,7 @@ requires-python = ">= 3.11"
 [project.scripts]
 helloworld-server = "grpc_tutor.greeter_server:serve"
 helloworld-client = "grpc_tutor.greeter_client:run"
+helloworld-client-async = "grpc_tutor.greeter_client:run_async"
 route-guide-server = "grpc_tutor.route_guide_server:serve"
 route-guide-client = "grpc_tutor.route_guide_client:run"
 
