@@ -86,7 +86,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     def GetFeature(
         self,
         request: route_guide_pb2.Point,
-        _context: route_guide_pb2_grpc._ServicerContext,
+        _context: grpc.ServicerContext,
     ) -> route_guide_pb2.Feature:
         position = Point.from_pb2_point(request)
         name = self.db.get(position, "")
@@ -95,7 +95,7 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
     def ListFeatures(
         self,
         request: route_guide_pb2.Rectangle,
-        _context: route_guide_pb2_grpc._ServicerContext,
+        _context: grpc.ServicerContext,
     ) -> Iterator[route_guide_pb2.Feature]:
         rectangle = Rectangle.from_pb2_rectangle(request)
         return (
@@ -106,8 +106,8 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
 
     def RecordRoute(
         self,
-        request_iterator: route_guide_pb2_grpc._MaybeAsyncIterator[route_guide_pb2.Point],
-        context: route_guide_pb2_grpc._ServicerContext,
+        request_iterator: Iterator[route_guide_pb2.Point],
+        context: grpc.ServicerContext,
     ) -> route_guide_pb2.RouteSummary:
         count = 0
         feature_count = 0
@@ -133,10 +133,8 @@ class RouteGuideServicer(route_guide_pb2_grpc.RouteGuideServicer):
 
     def RouteChat(
         self,
-        request_iterator: route_guide_pb2_grpc._MaybeAsyncIterator[
-            route_guide_pb2.RouteNote
-        ],
-        _context: route_guide_pb2_grpc._ServicerContext,
+        request_iterator: Iterator[route_guide_pb2.RouteNote],
+        _context: grpc.ServicerContext,
     ) -> Iterator[route_guide_pb2.RouteNote]:
         # https://github.com/grpc/grpc/blob/b8a04ac/examples/python/route_guide/route_guide_server.py#L109-L115
         prev_notes: list[route_guide_pb2.RouteNote] = []
