@@ -2,8 +2,8 @@ import logging
 import random
 
 import grpc
-from generated import route_guide_pb2, route_guide_pb2_grpc
 
+from . import route_guide_pb2, route_guide_pb2_grpc
 from .route_guide_db import load_db
 
 

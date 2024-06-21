@@ -7,7 +7,8 @@ import asyncio
 import logging
 
 import grpc.aio
-from generated import helloworld_pb2, helloworld_pb2_grpc
+
+from . import helloworld_pb2, helloworld_pb2_grpc
 
 
 def run() -> None:

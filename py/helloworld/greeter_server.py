@@ -6,7 +6,8 @@ import logging
 from concurrent import futures
 
 import grpc.aio
-from generated import helloworld_pb2, helloworld_pb2_grpc
+
+from . import helloworld_pb2, helloworld_pb2_grpc
 
 
 class Greeter(helloworld_pb2_grpc.GreeterServicer):

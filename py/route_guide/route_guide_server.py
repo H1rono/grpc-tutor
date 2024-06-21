@@ -4,8 +4,8 @@ from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 
 import grpc
-from generated import route_guide_pb2, route_guide_pb2_grpc
 
+from . import route_guide_pb2, route_guide_pb2_grpc
 from .route_guide_db import Point, Rectangle, load_db
 
 
