@@ -13,12 +13,12 @@ readme = "README.md"
 requires-python = ">= 3.11"
 
 [project.scripts]
-helloworld-server = "grpc_tutor.greeter_server:serve"
-helloworld-server-async = "grpc_tutor.greeter_server:run_async_serve"
-helloworld-client = "grpc_tutor.greeter_client:run"
-helloworld-client-async = "grpc_tutor.greeter_client:run_async"
-route-guide-server = "grpc_tutor.route_guide_server:serve"
-route-guide-client = "grpc_tutor.route_guide_client:run"
+helloworld-server = "helloworld.greeter_server:serve"
+helloworld-server-async = "helloworld.greeter_server:run_async_serve"
+helloworld-client = "helloworld.greeter_client:run"
+helloworld-client-async = "hwlloworld.greeter_client:run_async"
+route-guide-server = "route_guide.route_guide_server:serve"
+route-guide-client = "route_guide.route_guide_client:run"
 
 [build-system]
 requires = ["setuptools"]
