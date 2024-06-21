@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from generated import helloworld_pb2 as generated_dot_helloworld__pb2
+from helloworld import helloworld_pb2 as helloworld_dot_helloworld__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
@@ -20,7 +20,7 @@ except ImportError:
 if _version_not_supported:
     warnings.warn(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in generated/helloworld_pb2_grpc.py depends on'
+        + f' but the generated code in helloworld/helloworld_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -42,8 +42,8 @@ class GreeterStub(object):
         """
         self.SayHello = channel.unary_unary(
                 '/helloworld.Greeter/SayHello',
-                request_serializer=generated_dot_helloworld__pb2.HelloRequest.SerializeToString,
-                response_deserializer=generated_dot_helloworld__pb2.HelloReply.FromString,
+                request_serializer=helloworld_dot_helloworld__pb2.HelloRequest.SerializeToString,
+                response_deserializer=helloworld_dot_helloworld__pb2.HelloReply.FromString,
                 _registered_method=True)
 
 
@@ -63,8 +63,8 @@ def add_GreeterServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'SayHello': grpc.unary_unary_rpc_method_handler(
                     servicer.SayHello,
-                    request_deserializer=generated_dot_helloworld__pb2.HelloRequest.FromString,
-                    response_serializer=generated_dot_helloworld__pb2.HelloReply.SerializeToString,
+                    request_deserializer=helloworld_dot_helloworld__pb2.HelloRequest.FromString,
+                    response_serializer=helloworld_dot_helloworld__pb2.HelloReply.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -93,8 +93,8 @@ class Greeter(object):
             request,
             target,
             '/helloworld.Greeter/SayHello',
-            generated_dot_helloworld__pb2.HelloRequest.SerializeToString,
-            generated_dot_helloworld__pb2.HelloReply.FromString,
+            helloworld_dot_helloworld__pb2.HelloRequest.SerializeToString,
+            helloworld_dot_helloworld__pb2.HelloReply.FromString,
             options,
             channel_credentials,
             insecure,

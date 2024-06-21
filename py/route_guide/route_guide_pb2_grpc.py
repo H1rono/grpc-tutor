@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from generated import route_guide_pb2 as generated_dot_route__guide__pb2
+from route_guide import route_guide_pb2 as route__guide_dot_route__guide__pb2
 
 GRPC_GENERATED_VERSION = '1.64.1'
 GRPC_VERSION = grpc.__version__
@@ -20,7 +20,7 @@ except ImportError:
 if _version_not_supported:
     warnings.warn(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in generated/route_guide_pb2_grpc.py depends on'
+        + f' but the generated code in route_guide/route_guide_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -41,23 +41,23 @@ class RouteGuideStub(object):
         """
         self.GetFeature = channel.unary_unary(
                 '/route_guide.RouteGuide/GetFeature',
-                request_serializer=generated_dot_route__guide__pb2.Point.SerializeToString,
-                response_deserializer=generated_dot_route__guide__pb2.Feature.FromString,
+                request_serializer=route__guide_dot_route__guide__pb2.Point.SerializeToString,
+                response_deserializer=route__guide_dot_route__guide__pb2.Feature.FromString,
                 _registered_method=True)
         self.ListFeatures = channel.unary_stream(
                 '/route_guide.RouteGuide/ListFeatures',
-                request_serializer=generated_dot_route__guide__pb2.Rectangle.SerializeToString,
-                response_deserializer=generated_dot_route__guide__pb2.Feature.FromString,
+                request_serializer=route__guide_dot_route__guide__pb2.Rectangle.SerializeToString,
+                response_deserializer=route__guide_dot_route__guide__pb2.Feature.FromString,
                 _registered_method=True)
         self.RecordRoute = channel.stream_unary(
                 '/route_guide.RouteGuide/RecordRoute',
-                request_serializer=generated_dot_route__guide__pb2.Point.SerializeToString,
-                response_deserializer=generated_dot_route__guide__pb2.RouteSummary.FromString,
+                request_serializer=route__guide_dot_route__guide__pb2.Point.SerializeToString,
+                response_deserializer=route__guide_dot_route__guide__pb2.RouteSummary.FromString,
                 _registered_method=True)
         self.RouteChat = channel.stream_stream(
                 '/route_guide.RouteGuide/RouteChat',
-                request_serializer=generated_dot_route__guide__pb2.RouteNote.SerializeToString,
-                response_deserializer=generated_dot_route__guide__pb2.RouteNote.FromString,
+                request_serializer=route__guide_dot_route__guide__pb2.RouteNote.SerializeToString,
+                response_deserializer=route__guide_dot_route__guide__pb2.RouteNote.FromString,
                 _registered_method=True)
 
 
@@ -102,23 +102,23 @@ def add_RouteGuideServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'GetFeature': grpc.unary_unary_rpc_method_handler(
                     servicer.GetFeature,
-                    request_deserializer=generated_dot_route__guide__pb2.Point.FromString,
-                    response_serializer=generated_dot_route__guide__pb2.Feature.SerializeToString,
+                    request_deserializer=route__guide_dot_route__guide__pb2.Point.FromString,
+                    response_serializer=route__guide_dot_route__guide__pb2.Feature.SerializeToString,
             ),
             'ListFeatures': grpc.unary_stream_rpc_method_handler(
                     servicer.ListFeatures,
-                    request_deserializer=generated_dot_route__guide__pb2.Rectangle.FromString,
-                    response_serializer=generated_dot_route__guide__pb2.Feature.SerializeToString,
+                    request_deserializer=route__guide_dot_route__guide__pb2.Rectangle.FromString,
+                    response_serializer=route__guide_dot_route__guide__pb2.Feature.SerializeToString,
             ),
             'RecordRoute': grpc.stream_unary_rpc_method_handler(
                     servicer.RecordRoute,
-                    request_deserializer=generated_dot_route__guide__pb2.Point.FromString,
-                    response_serializer=generated_dot_route__guide__pb2.RouteSummary.SerializeToString,
+                    request_deserializer=route__guide_dot_route__guide__pb2.Point.FromString,
+                    response_serializer=route__guide_dot_route__guide__pb2.RouteSummary.SerializeToString,
             ),
             'RouteChat': grpc.stream_stream_rpc_method_handler(
                     servicer.RouteChat,
-                    request_deserializer=generated_dot_route__guide__pb2.RouteNote.FromString,
-                    response_serializer=generated_dot_route__guide__pb2.RouteNote.SerializeToString,
+                    request_deserializer=route__guide_dot_route__guide__pb2.RouteNote.FromString,
+                    response_serializer=route__guide_dot_route__guide__pb2.RouteNote.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -146,8 +146,8 @@ class RouteGuide(object):
             request,
             target,
             '/route_guide.RouteGuide/GetFeature',
-            generated_dot_route__guide__pb2.Point.SerializeToString,
-            generated_dot_route__guide__pb2.Feature.FromString,
+            route__guide_dot_route__guide__pb2.Point.SerializeToString,
+            route__guide_dot_route__guide__pb2.Feature.FromString,
             options,
             channel_credentials,
             insecure,
@@ -173,8 +173,8 @@ class RouteGuide(object):
             request,
             target,
             '/route_guide.RouteGuide/ListFeatures',
-            generated_dot_route__guide__pb2.Rectangle.SerializeToString,
-            generated_dot_route__guide__pb2.Feature.FromString,
+            route__guide_dot_route__guide__pb2.Rectangle.SerializeToString,
+            route__guide_dot_route__guide__pb2.Feature.FromString,
             options,
             channel_credentials,
             insecure,
@@ -200,8 +200,8 @@ class RouteGuide(object):
             request_iterator,
             target,
             '/route_guide.RouteGuide/RecordRoute',
-            generated_dot_route__guide__pb2.Point.SerializeToString,
-            generated_dot_route__guide__pb2.RouteSummary.FromString,
+            route__guide_dot_route__guide__pb2.Point.SerializeToString,
+            route__guide_dot_route__guide__pb2.RouteSummary.FromString,
             options,
             channel_credentials,
             insecure,
@@ -227,8 +227,8 @@ class RouteGuide(object):
             request_iterator,
             target,
             '/route_guide.RouteGuide/RouteChat',
-            generated_dot_route__guide__pb2.RouteNote.SerializeToString,
-            generated_dot_route__guide__pb2.RouteNote.FromString,
+            route__guide_dot_route__guide__pb2.RouteNote.SerializeToString,
+            route__guide_dot_route__guide__pb2.RouteNote.FromString,
             options,
             channel_credentials,
             insecure,
