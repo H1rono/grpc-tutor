@@ -6,3 +6,18 @@ members = ["./rs/*"]
 edition = "2021"
 version = "0.1.0"
 publish = false
+
+[workspace.dependencies]
+anyhow = { version = "1.0.95", features = ["backtrace"] }
+axum = "0.8.1"
+bytes = "1.9.0"
+futures = "0.3.31"
+prost = "0.13.4"
+tonic = "0.12.3"
+tonic-build = "0.12.3"
+tokio = { version = "1.43.0", features = ["full"] }
+tower = { version = "0.5.2", features = ["util"] }
+tower-http = { version = "0.6.2", features = ["trace"] }
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter", "fmt"] }
+
