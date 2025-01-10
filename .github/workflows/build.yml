@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  PROTOC_VERSION: "29.3"
+
 jobs:
   python:
     runs-on: ubuntu-latest
@@ -17,3 +20,16 @@ jobs:
       - run: pip install -r requirements-dev.lock
       - run: ruff check
       - run: mypy -p py
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          PROTOC_ZIP="protoc-$PROTOC_VERSION-linux-x86_64.zip"
+          curl -fvLO \
+            "https://github.com/protocolbuffers/protobuf/releases/download/v$PROTOC_VERSION/$PROTOC_ZIP"
+          sudo unzip -o "$PROTOC_ZIP" -d /usr/local bin/protoc
+          sudo unzip -o "$PROTOC_ZIP" -d /usr/local 'include/*'
+          rm "$PROTOC_ZIP"
+      - run: cargo build
+      - run: cargo clippy -- -D warnings
