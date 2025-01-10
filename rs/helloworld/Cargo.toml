@@ -4,6 +4,10 @@ version.workspace = true
 edition.workspace = true
 publish.workspace = true
 
+[[bin]]
+name = "helloworld-server"
+path = "src/bin/server.rs"
+
 [dependencies]
 anyhow.workspace = true
 bytes.workspace = true
