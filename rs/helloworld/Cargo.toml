@@ -8,6 +8,10 @@ publish.workspace = true
 name = "helloworld-server"
 path = "src/bin/server.rs"
 
+[[bin]]
+name = "helloworld-client"
+path = "src/bin/client.rs"
+
 [dependencies]
 anyhow.workspace = true
 bytes.workspace = true
