@@ -102,6 +102,7 @@ class Rectangle:
 
 
 def load_db() -> list[Feature]:
+    # FIXME
     db_bytes = pkgutil.get_data("grpc_tutor", "route_guide_db/db.json")
     assert db_bytes is not None
     db = json.loads(db_bytes.decode())
