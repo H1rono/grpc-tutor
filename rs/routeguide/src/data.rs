@@ -1,19 +1,10 @@
-use std::{fs, hash, io, path};
+use std::{fs, io, path};
 
 use serde::{de, ser, Deserialize, Serialize};
 
 use crate::{Feature, Point};
 
 // MARK: Point
-
-impl hash::Hash for Point {
-    fn hash<H: hash::Hasher>(&self, state: &mut H) {
-        self.latitude.hash(state);
-        self.longitude.hash(state);
-    }
-}
-
-impl Eq for Point {}
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash, Deserialize, Serialize)]
 struct SerdePoint {
