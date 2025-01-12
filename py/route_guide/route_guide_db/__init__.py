@@ -4,7 +4,7 @@ import pkgutil
 from dataclasses import dataclass
 from typing import Self
 
-from generated import route_guide_pb2
+from . import route_guide_pb2
 
 
 @dataclass(frozen=True)
