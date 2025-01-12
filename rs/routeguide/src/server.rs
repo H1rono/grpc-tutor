@@ -2,17 +2,21 @@ use std::sync::Arc;
 
 use anyhow::Context;
 use futures::stream::BoxStream;
-use tokio::sync::RwLock;
+use tokio::{fs::File, io, sync::RwLock};
 use tonic::{Request, Response, Status, Streaming};
 
 use crate::route_guide_server::{RouteGuide, RouteGuideServer};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct RouteGuideService {
     features: Arc<RwLock<Vec<crate::Feature>>>,
 }
 
 impl RouteGuideService {
+    pub fn new() -> Self {
+        Default::default()
+    }
+
     pub fn build(self) -> RouteGuideServer<Self> {
         RouteGuideServer::new(self)
     }
@@ -27,6 +31,13 @@ impl RouteGuideService {
         tracing::info!("Read features");
         let features = Arc::new(RwLock::new(features));
         Ok(Self { features })
+    }
+
+    pub fn runtime_loader(&self) -> RuntimeLoader<'_> {
+        RuntimeLoader {
+            service: self,
+            reader: (),
+        }
     }
 
     async fn find_feature_at(&self, location: &crate::Point) -> Option<crate::Feature> {
@@ -190,5 +201,59 @@ impl RouteGuide for RouteGuideService {
         let stream = futures::stream::select(tx_stream, rx_stream)
             .filter_map(|r| async move { r.transpose() });
         Ok(Response::new(stream.boxed()))
+    }
+}
+
+// MARK: RuntimeLoader
+
+pub struct RuntimeLoader<'a, R = ()> {
+    service: &'a RouteGuideService,
+    reader: R,
+}
+
+impl<'a, R> RuntimeLoader<'a, R> {
+    pub async fn open(
+        self,
+        path: impl AsRef<std::path::Path>,
+    ) -> io::Result<RuntimeLoader<'a, File>> {
+        let Self { service, reader: _ } = self;
+        let file = File::open(path).await?;
+        Ok(RuntimeLoader {
+            service,
+            reader: file,
+        })
+    }
+
+    pub fn with_reader<R2>(self, reader: R2) -> RuntimeLoader<'a, R2>
+    where
+        R2: io::AsyncRead + Unpin,
+    {
+        let Self { service, reader: _ } = self;
+        RuntimeLoader { service, reader }
+    }
+
+    pub async fn load(self) -> anyhow::Result<()>
+    where
+        R: io::AsyncRead + Unpin,
+    {
+        use io::AsyncReadExt;
+
+        let Self {
+            service,
+            mut reader,
+        } = self;
+        let buf = {
+            let mut buf = String::new();
+            reader
+                .read_to_string(&mut buf)
+                .await
+                .context("Failed to read input")?;
+            buf
+        };
+        let mut new_features: Vec<crate::Feature> =
+            serde_json::from_str(&buf).context("Failed to parse features JSON")?;
+        let mut features = service.features.write().await;
+        features.append(&mut new_features);
+        Ok(())
     }
 }
