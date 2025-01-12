@@ -7,9 +7,6 @@ use futures::stream::BoxStream;
 use tokio::sync::RwLock;
 use tonic::{Request, Response, Status, Streaming};
 
-pub use route_guide_client as client;
-pub use route_guide_server as server;
-
 pub mod data;
 mod util;
 
@@ -112,7 +109,7 @@ impl RouteGuideService {
 }
 
 #[tonic::async_trait]
-impl crate::server::RouteGuide for RouteGuideService {
+impl route_guide_server::RouteGuide for RouteGuideService {
     #[tracing::instrument(skip(self))]
     async fn get_feature(
         &self,
