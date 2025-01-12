@@ -23,7 +23,7 @@ async fn main() -> anyhow::Result<()> {
     let addr: std::net::SocketAddr = ([0, 0, 0, 0], port).into();
     let db_path =
         std::env::var("ROUTE_GUIDE_DB").unwrap_or_else(|_| "data/route_guide_db.json".to_string());
-    let service = lib::RouteGuideService::load(&db_path)?;
+    let service = lib::server::RouteGuideService::load(&db_path)?;
     let trace_layer = tower_http::trace::TraceLayer::new_for_grpc();
     let server = tonic::transport::Server::builder()
         .layer(trace_layer)
