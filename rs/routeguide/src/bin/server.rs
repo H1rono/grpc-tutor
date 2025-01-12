@@ -123,29 +123,40 @@ impl lib::server::RouteGuide for RouteGuideService {
 
     type RouteChatStream = BoxStream<'static, Result<lib::RouteNote, Status>>;
 
+    #[tracing::instrument(skip_all)]
     async fn route_chat(
         &self,
         request: Request<Streaming<lib::RouteNote>>,
     ) -> Result<Response<Self::RouteChatStream>, Status> {
         use futures::{StreamExt, TryStreamExt};
         use std::collections::HashMap;
+        use tokio_stream::wrappers::ReceiverStream;
 
         tracing::debug!("Route chat");
         let (_, _, mut notes) = request.into_parts();
-        let stream = async_stream::try_stream! {
+        let (tx, rx) = tokio::sync::mpsc::channel(2);
+        let tx_future = async move {
             let mut read_notes: HashMap<_, Vec<_>> = HashMap::new();
             while let Some(note) = notes.try_next().await? {
-                let Some(location) = &note.location else {
+                let Some(location) = note.location else {
                     continue;
                 };
-                let matches = read_notes.entry(*location).or_default();
+                let matches = read_notes.entry(location).or_default();
                 matches.push(note);
                 for n in matches {
-                    yield n.clone()
+                    tx.send(Ok(Some(n.clone()))).await.map_err(|e| {
+                        tracing::error!(error = &e as &dyn std::error::Error, "Send failed");
+                        Status::internal("")
+                    })?;
                 }
             }
             tracing::debug!("Done route chat");
+            Ok(None)
         };
+        let tx_stream = futures::stream::once(tx_future);
+        let rx_stream = ReceiverStream::new(rx);
+        let stream = futures::stream::select(tx_stream, rx_stream)
+            .filter_map(|r| async move { r.transpose() });
         Ok(Response::new(stream.boxed()))
     }
 }
