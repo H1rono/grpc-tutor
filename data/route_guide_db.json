@@ -698,5 +698,12 @@
       "longitude": -747127767
     },
     "name": "3 Hasta Way, Newton, NJ 07860, USA"
+  },
+  {
+    "location": {
+      "latitude": 356810420,
+      "longitude": 1397672140
+    },
+    "name": "Tokyo Station"
   }
 ]
