@@ -10,7 +10,7 @@ publish = false
 [workspace.dependencies]
 anyhow = { version = "1.0.95", features = ["backtrace"] }
 async-stream = "0.3.6"
-axum = "0.8.1"
+axum = "0.7.9" # to adjust with tonic
 bytes = "1.9.0"
 futures = "0.3.31"
 prost = "0.13.4"

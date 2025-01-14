@@ -11,6 +11,7 @@ path = "src/bin/server.rs"
 [dependencies]
 anyhow.workspace = true
 async-stream.workspace = true
+axum.workspace = true
 futures.workspace = true
 prost.workspace = true
 rand.workspace = true
