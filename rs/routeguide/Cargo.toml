@@ -8,6 +8,10 @@ publish.workspace = true
 name = "routeguide-server"
 path = "src/bin/server.rs"
 
+[[bin]]
+name = "routeguide-client"
+path = "src/bin/client.rs"
+
 [dependencies]
 anyhow.workspace = true
 async-stream.workspace = true
