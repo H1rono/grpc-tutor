@@ -12,6 +12,10 @@ path = "src/bin/server.rs"
 name = "routeguide-client"
 path = "src/bin/client.rs"
 
+[[bin]]
+name = "routeguide-multiplex"
+path = "src/bin/multiplex.rs"
+
 [dependencies]
 anyhow.workspace = true
 async-stream.workspace = true
