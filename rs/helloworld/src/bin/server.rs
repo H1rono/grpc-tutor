@@ -24,6 +24,7 @@ impl lib::server::Greeter for MyGreeter {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    use tower::{ServiceBuilder, ServiceExt};
     use tracing_subscriber::EnvFilter;
 
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| "info".into());
@@ -43,11 +44,17 @@ async fn main() -> anyhow::Result<()> {
     let addr: std::net::SocketAddr = ([0, 0, 0, 0], port).into();
     let greeter = MyGreeter;
     let trace_layer = tower_http::trace::TraceLayer::new_for_grpc();
-    let server = tonic::transport::Server::builder()
+    let service = ServiceBuilder::new()
         .layer(trace_layer)
-        .add_service(lib::server::GreeterServer::new(greeter));
+        .service(lib::server::GreeterServer::new(greeter))
+        .map_request(|r: http::Request<_>| r)
+        .map_response(|r: http::Response<_>| r.map(axum::body::Body::new));
+    let listener = tokio::net::TcpListener::bind(addr)
+        .await
+        .with_context(|| format!("Failed to bind {addr}"))?;
     tracing::info!(%addr, "listening");
-    server.serve(addr).await?;
+    let make_service = axum::ServiceExt::into_make_service(service);
+    axum::serve(listener, make_service).await?;
 
     Ok(())
 }

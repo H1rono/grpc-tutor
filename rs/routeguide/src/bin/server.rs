@@ -4,6 +4,7 @@ use routeguide as lib;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    use tower::{ServiceBuilder, ServiceExt};
     use tracing_subscriber::EnvFilter;
 
     let env_filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| "info".into());
@@ -23,13 +24,19 @@ async fn main() -> anyhow::Result<()> {
     let addr: std::net::SocketAddr = ([0, 0, 0, 0], port).into();
     let db_path =
         std::env::var("ROUTE_GUIDE_DB").unwrap_or_else(|_| "data/route_guide_db.json".to_string());
-    let service = lib::server::RouteGuideService::load(&db_path)?;
+    let service = lib::server::RouteGuideService::load(&db_path)?.build();
     let trace_layer = tower_http::trace::TraceLayer::new_for_grpc();
-    let server = tonic::transport::Server::builder()
+    let service = ServiceBuilder::new()
         .layer(trace_layer)
-        .add_service(service.build());
+        .service(service)
+        .map_request(|r: http::Request<_>| r)
+        .map_response(|r: http::Response<_>| r.map(axum::body::Body::new));
+    let listener = tokio::net::TcpListener::bind(addr)
+        .await
+        .with_context(|| format!("Failed to bind {addr}"))?;
     tracing::info!(%addr, "listening");
-    server.serve(addr).await?;
+    let make_service = axum::ServiceExt::into_make_service(service);
+    axum::serve(listener, make_service).await?;
 
     Ok(())
 }
