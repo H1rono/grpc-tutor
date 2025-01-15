@@ -14,7 +14,9 @@ path = "src/bin/client.rs"
 
 [dependencies]
 anyhow.workspace = true
+axum.workspace = true
 bytes.workspace = true
+http.workspace = true
 prost.workspace = true
 tonic.workspace = true
 tokio.workspace = true
