@@ -4,6 +4,7 @@ use routeguide as lib;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    use tower::{ServiceBuilder, ServiceExt as _};
     use tower_http::trace::TraceLayer;
     use tracing_subscriber::EnvFilter;
 
@@ -13,13 +14,31 @@ async fn main() -> anyhow::Result<()> {
     let db_path =
         std::env::var("ROUTE_GUIDE_DB").unwrap_or_else(|_| "data/route_guide_db.json".to_string());
     let grpc_service = lib::server::RouteGuideService::load(&db_path)?.build();
+    let grpc_service = ServiceBuilder::new()
+        .layer(TraceLayer::new_for_grpc())
+        .service(grpc_service)
+        .map_request(|r: http::Request<_>| r)
+        .map_response(|res| res.map(axum::body::Body::new))
+        .boxed_clone();
     let http_router = axum::Router::<()>::new()
         .route("/ping", axum::routing::get(|| async { "pong".to_string() }))
-        .layer(TraceLayer::new_for_http());
-    let router = tonic::service::Routes::new(grpc_service)
-        .into_axum_router()
-        .nest("/", http_router)
-        .layer(TraceLayer::new_for_grpc());
+        .layer(TraceLayer::new_for_http())
+        .into_service()
+        .boxed_clone();
+    let router = tower::steer::Steer::new(
+        [grpc_service, http_router],
+        |req: &http::Request<_>, _: &[_]| {
+            let p = req
+                .headers()
+                .get(http::header::CONTENT_TYPE)
+                .is_some_and(|ct| ct.as_bytes().starts_with(b"application/grpc"));
+            if p {
+                0
+            } else {
+                1
+            }
+        },
+    );
 
     let port: u16 = std::env::var("PORT")
         .unwrap_or_else(|e| {
@@ -38,7 +57,8 @@ async fn main() -> anyhow::Result<()> {
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .with_context(|| format!("Failed to bind {addr}"))?;
-    axum::serve(listener, router).await?;
+    let make_service = axum::ServiceExt::into_make_service(router);
+    axum::serve(listener, make_service).await?;
 
     Ok(())
 }
