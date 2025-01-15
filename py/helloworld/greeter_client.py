@@ -5,10 +5,13 @@ from __future__ import print_function
 
 import asyncio
 import logging
+import os
 
 import grpc.aio
 
 from . import helloworld_pb2, helloworld_pb2_grpc
+
+PORT = os.environ.get("PORT", "50051")
 
 
 def run() -> None:
@@ -16,7 +19,7 @@ def run() -> None:
     # used in circumstances in which the with statement does not fit the needs
     # of the code.
     print("Will try to greet world ...")
-    with grpc.insecure_channel("localhost:50051") as channel:
+    with grpc.insecure_channel(f"localhost:{PORT}") as channel:
         stub = helloworld_pb2_grpc.GreeterStub(channel)
         response = stub.SayHello(helloworld_pb2.HelloRequest(name="you"))
     print("Greeter client received: " + response.message)
@@ -24,7 +27,7 @@ def run() -> None:
 
 async def client_async() -> None:
     print("Will try to greet world ...")
-    async with grpc.aio.insecure_channel("localhost:50051") as channel:
+    async with grpc.aio.insecure_channel(f"localhost:{PORT}") as channel:
         stub = helloworld_pb2_grpc.GreeterStub(channel)
         response = await stub.SayHello(helloworld_pb2.HelloRequest(name="world"))
     print("Greeter client received: " + response.message)

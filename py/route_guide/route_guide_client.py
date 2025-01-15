@@ -1,4 +1,5 @@
 import logging
+import os
 import random
 
 import grpc
@@ -65,7 +66,8 @@ def route_chat(stub: route_guide_pb2_grpc.RouteGuideStub) -> None:
 
 
 def run() -> None:
-    with grpc.insecure_channel("localhost:50051") as channel:
+    port = os.environ.get("PORT", "50051")
+    with grpc.insecure_channel(f"localhost:{port}") as channel:
         stub = route_guide_pb2_grpc.RouteGuideStub(channel)
         print("----- GetFeature -----")
         get_feature(stub)
